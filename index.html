@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knicks vs Spurs - NBA Finals Arena Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Custom Colors/Configs -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            knicks: {
+              blue: '#006BB6',
+              orange: '#F58426',
+              dark: '#002D62'
+            },
+            spurs: {
+              silver: '#BAC3B9',
+              black: '#000000',
+              gray: '#8A8D8F'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-oswald {
+      font-family: 'Oswald', sans-serif;
+    }
+    /* Dynamic Hover Tooltip Styles */
+    #hover-tooltip {
+      transition: opacity 0.15s ease-out, transform 0.1s ease-out;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-knicks-orange selection:text-white">
+
+  <!-- TOP BAR -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      
+      <!-- App Identity -->
+      <div class="flex items-center gap-3">
+        <div class="bg-gradient-to-tr from-knicks-orange to-knicks-blue p-2.5 rounded-xl shadow-lg">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight font-oswald uppercase text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-blue-400">FINALS ARENA</h1>
+          <p class="text-xs text-slate-400">Firebase Multi-Product Tech Showcase</p>
+        </div>
+      </div>
+
+      <!-- Connection / Standalone Badge & Era Selector -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Live Status Indicator -->
+        <div id="connection-badge" class="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 px-3 py-1.5 rounded-full text-xs font-semibold">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+          </span>
+          <span id="connection-status-text">Standalone Mock Mode</span>
+        </div>
+
+        <!-- Era Toggle -->
+        <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex gap-1">
+          <button id="era-classic-btn" class="px-4 py-1.5 rounded-lg text-xs font-bold uppercase transition-all bg-gradient-to-r from-slate-800 to-slate-700 text-white shadow-md">
+            1999 Classic
+          </button>
+          <button id="era-dream-btn" class="px-4 py-1.5 rounded-lg text-xs font-bold uppercase transition-all text-slate-400 hover:text-slate-200">
+            2026 Dream Match
+          </button>
+        </div>
+
+        <!-- Settings Cog -->
+        <button id="open-settings-btn" class="p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition">
+          <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+    <!-- LEFT COLUMN: CONTEXT, SERIES STATUS & COUNTDOWN (CLASS 1) -->
+    <div class="lg:col-span-3 space-y-6">
+      
+      <!-- HERO SERIES CARD -->
+      <div id="series-hero-card" class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-6 md:p-8 shadow-2xl">
+        <!-- Accent Glows -->
+        <div id="knicks-glow" class="absolute -left-16 -top-16 w-64 h-64 bg-knicks-blue/10 blur-[100px] rounded-full transition-all duration-700"></div>
+        <div id="spurs-glow" class="absolute -right-16 -bottom-16 w-64 h-64 bg-spurs-silver/10 blur-[100px] rounded-full transition-all duration-700"></div>
+
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+          
+          <!-- NY Knicks Side -->
+          <div class="text-center md:text-left space-y-2 flex-1">
+            <span class="bg-knicks-blue/20 text-blue-400 border border-knicks-blue/30 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">EASTERN CONF CHAMPIONS</span>
+            <h2 class="text-4xl md:text-5xl font-black font-oswald text-white tracking-wide">NEW YORK <span class="text-knicks-orange">KNICKS</span></h2>
+            <p id="knicks-subtitle" class="text-slate-400 text-sm">Sprewell & Houston Core Era</p>
+          </div>
+
+          <!-- VS / Score Center -->
+          <div class="flex flex-col items-center justify-center bg-slate-950/80 border border-slate-800 p-4 md:p-6 rounded-2xl min-w-[140px] shadow-inner text-center">
+            <span class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">SERIES SCORE</span>
+            <div id="series-score" class="text-5xl font-extrabold font-oswald text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-white to-slate-400 tracking-wider">
+              1 - 3
+            </div>
+            <span id="series-status-badge" class="mt-2 text-[10px] bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+              SPURS MATCHPOINT
+            </span>
+          </div>
+
+          <!-- SA Spurs Side -->
+          <div class="text-center md:text-right space-y-2 flex-1">
+            <span class="bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">WESTERN CONF CHAMPIONS</span>
+            <h2 class="text-4xl md:text-5xl font-black font-oswald text-white tracking-wide">SAN ANTONIO <span class="text-slate-300">SPURS</span></h2>
+            <p id="spurs-subtitle" class="text-slate-400 text-sm">The Twin Towers Era</p>
+          </div>
+
+        </div>
+
+        <!-- Venue / Series Sub-Banner -->
+        <div class="mt-6 pt-6 border-t border-slate-800/60 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span id="venue-text">Alasmodome, San Antonio, TX</span>
+          </div>
+          
+          <!-- Countdown -->
+          <div class="flex items-center gap-3">
+            <span class="text-slate-500 font-semibold uppercase tracking-wider">GAME 5 COUNTDOWN:</span>
+            <div id="countdown" class="font-mono bg-slate-950 border border-slate-800 px-3 py-1 rounded-lg text-knicks-orange font-bold text-sm">
+              00d : 00h : 00m : 00s
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROSTER SECTIONS (Side-by-Side Hover Cards) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- KNICKS ROSTER -->
+        <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 shadow-lg relative">
+          <!-- Team Header Accent -->
+          <div class="absolute left-0 top-6 w-1 h-8 bg-knicks-orange rounded-r"></div>
+          <h3 class="text-lg font-bold font-oswald text-slate-200 tracking-wider uppercase mb-4 pl-3">NEW YORK ROSTER</h3>
+          
+          <div id="knicks-roster" class="space-y-2.5">
+            <!-- Dynamic Inject -->
+          </div>
+        </div>
+
+        <!-- SPURS ROSTER -->
+        <div class="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-5 shadow-lg relative">
+          <!-- Team Header Accent -->
+          <div class="absolute left-0 top-6 w-1 h-8 bg-spurs-silver rounded-r"></div>
+          <h3 class="text-lg font-bold font-oswald text-slate-200 tracking-wider uppercase mb-4 pl-3">SAN ANTONIO ROSTER</h3>
+          
+          <div id="spurs-roster" class="space-y-2.5">
+            <!-- Dynamic Inject -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TEAM STATS COMPARISON MATRIX -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h3 class="text-xl font-bold font-oswald text-white tracking-wide uppercase">TEAM MATCH-UP MATRIX</h3>
+            <p class="text-xs text-slate-400">Comparing real series performance for the selected match</p>
+          </div>
+          <!-- Game Selection Dropdown -->
+          <select id="game-select" class="bg-slate-950 text-slate-200 border border-slate-800 px-4 py-2 rounded-xl text-xs font-bold outline-none cursor-pointer focus:border-knicks-blue transition">
+            <!-- Dynamic Inject -->
+          </select>
+        </div>
+
+        <!-- Progress Metrics Rows -->
+        <div id="stats-bars" class="space-y-4">
+          <!-- Dynamic Inject -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: FAN ZONE & PLAY-BY-PLAY FEED -->
+    <div class="lg:col-span-1 space-y-6 flex flex-col justify-between">
+      
+      <!-- REALTIME PLAY-BY-PLAY TICKER -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col h-[320px] shadow-xl">
+        <div class="flex items-center gap-2 border-b border-slate-800/60 pb-3 mb-3">
+          <svg class="w-4 h-4 text-knicks-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+          <span class="text-xs font-bold font-oswald text-slate-300 tracking-wider uppercase">PLAY-BY-PLAY STREAM</span>
+        </div>
+        <div id="ticker-feed" class="flex-grow overflow-y-auto space-y-2.5 text-xs pr-1 scrollbar-thin scrollbar-thumb-slate-800">
+          <!-- Dynamic Event Inject -->
+        </div>
+      </div>
+
+      <!-- FAN ZONE CHAT BOX -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col h-[360px] shadow-xl">
+        <div class="flex items-center justify-between border-b border-slate-800/60 pb-3 mb-3">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-knicks-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <span class="text-xs font-bold font-oswald text-slate-300 tracking-wider uppercase">FAN ZONE LIVE CHAT</span>
+          </div>
+          <span id="chat-mode" class="text-[9px] font-mono text-slate-400 bg-slate-950 px-2 py-0.5 rounded border border-slate-800">Local Cache</span>
+        </div>
+
+        <!-- Messages Feed -->
+        <div id="chat-messages" class="flex-grow overflow-y-auto space-y-2.5 text-xs pr-1 mb-3 scrollbar-thin scrollbar-thumb-slate-800">
+          <!-- Message blocks inject -->
+        </div>
+
+        <!-- Input Box -->
+        <form id="chat-form" class="flex gap-1.5 mt-auto">
+          <input id="chat-username" type="text" placeholder="Alias" class="w-16 bg-slate-950 text-xs border border-slate-800 text-slate-200 p-2 rounded-xl focus:border-knicks-blue outline-none font-semibold text-center" value="Fan" required />
+          <input id="chat-input" type="text" placeholder="Roar for your team..." class="flex-grow bg-slate-950 text-xs border border-slate-800 text-slate-200 p-2 rounded-xl focus:border-knicks-blue outline-none" required />
+          <button type="submit" class="bg-knicks-blue hover:bg-knicks-blue/90 px-3.5 rounded-xl text-white font-bold transition flex items-center justify-center">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- DYNAMIC HOVER STATS TOOLTIP -->
+  <div id="hover-tooltip" class="fixed opacity-0 bg-slate-950/95 border border-slate-800 p-4 rounded-2xl shadow-2xl z-50 w-72 backdrop-blur-md pointer-events-none transition-all duration-150 scale-95">
+    <div class="flex justify-between items-start mb-2.5 border-b border-slate-800/80 pb-2">
+      <div>
+        <h4 id="tooltip-name" class="text-sm font-extrabold font-oswald tracking-wide text-white uppercase">---</h4>
+        <p id="tooltip-meta" class="text-[10px] text-slate-400 font-semibold uppercase">---</p>
+      </div>
+      <span id="tooltip-number" class="text-lg font-black font-oswald text-knicks-orange">#00</span>
+    </div>
+    
+    <!-- Shooting progress bars inside hover -->
+    <div class="space-y-2 mb-3 text-[10px]">
+      <div>
+        <div class="flex justify-between text-slate-400 mb-0.5">
+          <span>FIELD GOAL %</span>
+          <span id="tooltip-fg" class="font-bold text-slate-200">0%</span>
+        </div>
+        <div class="h-1 bg-slate-900 rounded-full overflow-hidden">
+          <div id="tooltip-fg-bar" class="h-full bg-knicks-orange rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between text-slate-400 mb-0.5">
+          <span>3-POINT %</span>
+          <span id="tooltip-3p" class="font-bold text-slate-200">0%</span>
+        </div>
+        <div class="h-1 bg-slate-900 rounded-full overflow-hidden">
+          <div id="tooltip-3p-bar" class="h-full bg-knicks-blue rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scouter Summary -->
+    <div class="border-t border-slate-800/60 pt-2 text-[10px] text-slate-400 leading-relaxed italic">
+      <span class="font-bold text-slate-300 uppercase not-italic block mb-0.5">Scouter Bio</span>
+      "<span id="tooltip-bio">---</span>"
+    </div>
+  </div>
+
+  <!-- SETTINGS / ADMIN MODAL -->
+  <div id="settings-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+      <!-- Modal Header -->
+      <div class="border-b border-slate-800 p-5 flex justify-between items-center bg-slate-950/40">
+        <h3 class="text-lg font-bold font-oswald tracking-wide text-white uppercase">CONSOLE & ADMIN CONFIGURATION</h3>
+        <button id="close-settings-btn" class="text-slate-400 hover:text-white p-1 rounded-lg transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6 overflow-y-auto">
+        <!-- Firebase Connection Toggle -->
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <h4 class="text-sm font-bold text-slate-200">Firebase Live Integration</h4>
+              <p class="text-[11px] text-slate-400">Sync with Live Firestore, Realtime Database & Auth</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="firebase-toggle" class="sr-only peer">
+              <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <!-- Web SDK Configuration Textarea -->
+          <div id="firebase-config-wrapper" class="hidden space-y-2 mt-3">
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Paste Web App SDK configuration JSON:</label>
+            <textarea id="firebase-config-input" rows="5" class="w-full bg-slate-900 border border-slate-800 text-slate-300 text-xs p-3 rounded-xl font-mono focus:border-knicks-orange outline-none" placeholder='{&#10;  "apiKey": "AIzaSy...",&#10;  "authDomain": "...",&#10;  "databaseURL": "...",&#10;  "projectId": "...",&#10;  "storageBucket": "...",&#10;  "appId": "..."&#10;}'></textarea>
+            <button id="save-config-btn" class="w-full bg-gradient-to-r from-knicks-orange to-knicks-blue hover:opacity-95 text-white text-xs font-bold py-2 rounded-xl transition">
+              Save & Apply Credentials
+            </button>
+          </div>
+        </div>
+
+        <!-- Admin Controls Simulation (Mock Actions) -->
+        <div class="space-y-3">
+          <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wide font-oswald">Simulate Admin Interactivity</h4>
+          
+          <!-- Post Ticker Block -->
+          <div class="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-2xl space-y-2.5">
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Broadcast Realtime Commentary</label>
+            <div class="flex gap-2">
+              <input id="custom-event-input" type="text" placeholder="e.g. Latrell Sprewell blocks Tim Duncan's post-hook!" class="flex-grow bg-slate-900 border border-slate-800 text-slate-300 text-xs p-2 rounded-xl focus:border-knicks-blue outline-none" />
+              <button id="broadcast-event-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 text-xs font-bold rounded-xl transition border border-slate-700">
+                Broadcast
+              </button>
+            </div>
+          </div>
+
+          <!-- PPG Buff Block -->
+          <div class="bg-slate-950/60 border border-slate-800/80 p-3.5 rounded-2xl space-y-2.5">
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Stat Mod Engine (Live +10 PPG Boost)</label>
+            <div class="flex gap-2">
+              <select id="player-buff-select" class="flex-grow bg-slate-900 border border-slate-800 text-slate-200 text-xs p-2 rounded-xl outline-none focus:border-knicks-orange">
+                <!-- Dynamic Roster list injected -->
+              </select>
+              <button id="buff-stat-btn" class="bg-knicks-orange hover:bg-knicks-orange/90 text-white px-4 text-xs font-bold rounded-xl transition">
+                +10 PPG Boost
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 space-y-2 max-w-sm pointer-events-none"></div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500 mt-auto">
+    <p>Knicks-Spurs Showcase Platform © 2026. Made by a die-hard New York Knicks Fan! 🏀🔥</p>
+  </footer>
+
+  <!-- Application JS Engine -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

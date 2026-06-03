@@ -1,0 +1,17 @@
+# apphosting.yaml - Configurations for deployment via Firebase App Hosting [1]
+# Standard spec schema configuration for Node/Next/SPA host configurations
+
+# The deployment runtime parameters
+runConfig:
+  minInstances: 0        # Scales down to zero when idle to conserve budget
+  maxInstances: 10       # Safe cost boundaries
+  concurrency: 80        # Handles up to 80 requests simultaneously per server instance
+  cpu: 1                 # 1 CPU Allocation
+  memoryMiB: 512         # 512MB RAM Allocation
+
+# Secret manager variables mapping
+env:
+  - name: FIREBASE_API_KEY
+    valueFromSecret: FIREBASE_API_KEY
+  - name: APP_STAGING_MODE
+    value: "production"
