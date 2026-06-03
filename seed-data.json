@@ -68,6 +68,21 @@
             "bio": "Tough defender and post presence. Famous for his '4-point play' in the Eastern Conference Finals that drove the Knicks to this stage."
           },
           {
+            "name": "Rick Brunson",
+            "position": "PG",
+            "jersey": "11",
+            "height": "6'4\"",
+            "college": "Temple",
+            "stats": {
+              "ppg": "2.2",
+              "rpg": "1.0",
+              "apg": "1.4",
+              "fgPct": "33.3%",
+              "threePct": "0.0%"
+            },
+            "bio": "Backup point guard who wore #11 and played exactly 9.9 seconds in Game 3—the only game the Knicks won in the '99 series! Now a Knicks assistant coach watching his son Jalen wear #11 and lead the 2026 squad!"
+          },
+          {
             "name": "Charlie Ward",
             "position": "PG",
             "jersey": "21",
@@ -200,8 +215,8 @@
       ]
     },
     "dream_2026": {
-      "seriesScore": "3 - 2",
-      "seriesStatus": "KNICKS MATCHPOINT",
+      "seriesScore": "0 - 0",
+      "seriesStatus": "GAME 1 TONIGHT (JUNE 3) at MSG",
       "venue": "Madison Square Garden, New York, NY",
       "knicks": {
         "subtitle": "Jalen Brunson's Dream Era",
@@ -366,34 +381,34 @@
       "games": [
         {
           "id": "2026_g1",
-          "name": "Game 1: NY 108, SA 102",
+          "name": "Game 1: Tonight at MSG (Projected)",
           "teamComparison": {
-            "knicks": { "pts": 108, "fgPct": 48.5, "reb": 44, "ast": 24, "blk": 4 },
-            "spurs": { "pts": 102, "fgPct": 45.1, "reb": 42, "ast": 22, "blk": 8 }
+            "knicks": { "pts": 110, "fgPct": 47.5, "reb": 44, "ast": 24, "blk": 5 },
+            "spurs": { "pts": 108, "fgPct": 46.2, "reb": 43, "ast": 23, "blk": 8 }
           }
         },
         {
           "id": "2026_g2",
-          "name": "Game 2: SA 114, NY 110",
+          "name": "Game 2: June 5 at MSG (Upcoming)",
           "teamComparison": {
-            "knicks": { "pts": 110, "fgPct": 44.2, "reb": 40, "ast": 21, "blk": 3 },
-            "spurs": { "pts": 114, "fgPct": 51.0, "reb": 48, "ast": 26, "blk": 11 }
+            "knicks": { "pts": 112, "fgPct": 48.0, "reb": 45, "ast": 25, "blk": 4 },
+            "spurs": { "pts": 110, "fgPct": 47.0, "reb": 44, "ast": 24, "blk": 9 }
           }
         },
         {
           "id": "2026_g3",
-          "name": "Game 3: NY 115, SA 109",
+          "name": "Game 3: June 8 at SA (Upcoming)",
           "teamComparison": {
-            "knicks": { "pts": 115, "fgPct": 49.1, "reb": 45, "ast": 25, "blk": 5 },
-            "spurs": { "pts": 109, "fgPct": 47.3, "reb": 41, "ast": 20, "blk": 7 }
+            "knicks": { "pts": 105, "fgPct": 45.5, "reb": 41, "ast": 22, "blk": 5 },
+            "spurs": { "pts": 109, "fgPct": 48.2, "reb": 47, "ast": 25, "blk": 10 }
           }
         },
         {
           "id": "2026_g4",
-          "name": "Game 4: SA 105, NY 101",
+          "name": "Game 4: June 10 at SA (Upcoming)",
           "teamComparison": {
-            "knicks": { "pts": 101, "fgPct": 42.5, "reb": 41, "ast": 18, "blk": 6 },
-            "spurs": { "pts": 105, "fgPct": 46.8, "reb": 49, "ast": 24, "blk": 9 }
+            "knicks": { "pts": 106, "fgPct": 46.0, "reb": 42, "ast": 23, "blk": 6 },
+            "spurs": { "pts": 107, "fgPct": 47.5, "reb": 46, "ast": 24, "blk": 9 }
           }
         }
       ]
