@@ -12,6 +12,6 @@ runConfig:
 # Secret manager variables mapping
 env:
   - name: FIREBASE_API_KEY
-    valueFromSecret: FIREBASE_API_KEY
+    value: FIREBASE_API_KEY
   - name: APP_STAGING_MODE
     value: "production"
