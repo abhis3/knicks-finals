@@ -1,0 +1,8 @@
+{
+  "name": "Knicks vs Spurs - NBA Finals Arena Dashboard",
+  "description": "An interactive arena dashboard tracking matchups, rosters, and live stats for Knicks vs Spurs, featuring mock standalone states and real-time Firebase support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
